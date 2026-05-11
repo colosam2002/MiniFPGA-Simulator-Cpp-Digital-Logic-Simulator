@@ -7,6 +7,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(minifpga
     src/main.cpp
+    src/Signal.cpp
+    src/Component.cpp
+    src/Circuit.cpp
+    src/gates/AndGate.cpp
+    src/gates/OrGate.cpp
+    src/gates/XorGate.cpp
+    src/gates/NotGate.cpp
 )
 
 target_include_directories(minifpga PRIVATE
