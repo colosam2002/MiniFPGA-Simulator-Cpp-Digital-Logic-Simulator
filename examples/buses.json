@@ -1,0 +1,18 @@
+{
+  "signals": [],
+
+  "buses": [
+    {
+      "name": "BUS_A",
+      "width": 8,
+      "initial": 13
+    },
+    {
+      "name": "BUS_B",
+      "width": 8,
+      "initial": 240
+    }
+  ],
+
+  "components": []
+}

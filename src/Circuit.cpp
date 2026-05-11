@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include "core/Bus.hpp"
 
 Signal& Circuit::createSignal(
     const std::string& name,
@@ -49,4 +50,47 @@ Signal& Circuit::getSignal(
     }
 
     return *(it->second);
+}
+
+Bus& Circuit::createBus(
+    const std::string& name,
+    int width
+) {
+
+    buses.push_back(
+        std::make_unique<Bus>(
+            name,
+            width
+        )
+    );
+
+    Bus* busPtr = buses.back().get();
+
+    busMap[name] = busPtr;
+
+    return *busPtr;
+}
+
+Bus& Circuit::getBus(
+    const std::string& name
+) {
+
+    auto it = busMap.find(name);
+
+    if (it == busMap.end()) {
+
+        throw std::runtime_error(
+            "Bus not found: " + name
+        );
+    }
+
+    return *(it->second);
+}
+
+void Circuit::printBuses() const {
+
+    for (const auto& bus : buses) {
+
+        bus->print();
+    }
 }

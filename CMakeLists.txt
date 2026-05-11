@@ -18,6 +18,10 @@ add_executable(minifpga
     src/subcircuits/FullAdder.cpp
     src/factory/GateFactory.cpp
     src/parser/CircuitParser.cpp
+    src/core/Bus.cpp
+    src/subcircuits/MultiBitAdder.cpp
+    src/subcircuits/BasicALU.cpp
+    src/subcircuits/Mux2to1.cpp
 )
 
 target_include_directories(minifpga PRIVATE

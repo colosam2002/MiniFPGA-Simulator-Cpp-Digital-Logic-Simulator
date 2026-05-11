@@ -1,41 +1,103 @@
 #include <iostream>
-#include <string>
 
 #include "parser/CircuitParser.hpp"
+#include "subcircuits/BasicALU.hpp"
 
-void printUsage() {
-    std::cout << "Usage:" << std::endl;
-    std::cout << "  ./minifpga <circuit.json>" << std::endl;
+void runOperation(
+    BasicALU& alu,
+    ALUOperation operation,
+    const std::string& operationName,
+    Bus& resultBus
+) {
+
+    alu.execute(operation);
+
+    std::cout
+        << operationName
+        << ":" << std::endl;
+
+    resultBus.print();
+
+    std::cout << std::endl;
 }
 
 int main(int argc, char* argv[]) {
+
     if (argc < 2) {
-        printUsage();
+
+        std::cout
+            << "Usage: ./minifpga <file.json>"
+            << std::endl;
+
         return 1;
     }
 
-    const std::string filepath = argv[1];
-
     try {
+
         Circuit circuit =
-            CircuitParser::parseFromFile(filepath);
+            CircuitParser::parseFromFile(
+                argv[1]
+            );
 
-        std::cout << "Loaded circuit: "
-                  << filepath
-                  << std::endl;
+        Bus& busA =
+            circuit.getBus("BUS_A");
 
-        std::cout << "\nInitial signals:" << std::endl;
-        circuit.printSignals();
+        Bus& busB =
+            circuit.getBus("BUS_B");
 
-        circuit.evaluate();
+        Bus& resultBus =
+            circuit.getBus("RESULT");
 
-        std::cout << "\nAfter evaluation:" << std::endl;
-        circuit.printSignals();
+        std::cout
+            << "Inputs:"
+            << std::endl;
+
+        busA.print();
+        busB.print();
+
+        std::cout << std::endl;
+
+        BasicALU alu(
+            busA,
+            busB,
+            resultBus
+        );
+
+        runOperation(
+            alu,
+            ALUOperation::ADD,
+            "ADD",
+            resultBus
+        );
+
+        runOperation(
+            alu,
+            ALUOperation::AND,
+            "AND",
+            resultBus
+        );
+
+        runOperation(
+            alu,
+            ALUOperation::OR,
+            "OR",
+            resultBus
+        );
+
+        runOperation(
+            alu,
+            ALUOperation::XOR,
+            "XOR",
+            resultBus
+        );
     }
+
     catch (const std::exception& error) {
-        std::cerr << "Error: "
-                  << error.what()
-                  << std::endl;
+
+        std::cerr
+            << "Error: "
+            << error.what()
+            << std::endl;
 
         return 1;
     }

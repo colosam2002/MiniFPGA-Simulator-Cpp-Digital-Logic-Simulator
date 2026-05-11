@@ -8,12 +8,16 @@
 
 #include "Component.hpp"
 #include "Signal.hpp"
+#include "core/Bus.hpp"
 
 class Circuit {
 private:
     std::vector<std::unique_ptr<Signal>> signals;
     std::vector<std::unique_ptr<Component>> components;
     std::unordered_map<std::string, Signal*> signalMap;
+
+    std::vector<std::unique_ptr<Bus>> buses;
+    std::unordered_map<std::string, Bus*> busMap;
 
 public:
     Signal& createSignal(
@@ -28,6 +32,17 @@ public:
     void evaluate();
 
     void printSignals() const;
+
+    Bus& createBus(
+        const std::string& name,
+        int width
+    );
+
+    Bus& getBus(
+        const std::string& name
+    );
+
+    void printBuses() const;
 };
 
 #endif

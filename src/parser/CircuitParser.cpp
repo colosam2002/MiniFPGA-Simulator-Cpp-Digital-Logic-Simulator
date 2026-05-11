@@ -34,6 +34,12 @@ Circuit CircuitParser::parseFromFile(
         );
     }
 
+    if (!data.contains("buses")) {
+        throw std::runtime_error(
+            "JSON missing 'buses' field"
+        );
+    }
+
     Circuit circuit;
 
     for (const auto& signalData : data["signals"]) {
@@ -57,6 +63,33 @@ Circuit CircuitParser::parseFromFile(
         }
 
         circuit.createSignal(signalName, initialValue);
+    }
+
+    for (const auto& busData : data["buses"]) {
+
+        std::string busName =
+            busData["name"];
+
+        int width =
+            busData["width"];
+
+        unsigned int initialValue = 0;
+
+        if (busData.contains("initial")) {
+
+            initialValue =
+                busData["initial"];
+        }
+
+        Bus& bus =
+            circuit.createBus(
+                busName,
+                width
+            );
+
+        bus.setValueFromInteger(
+            initialValue
+        );
     }
 
     for (const auto& componentData : data["components"]) {

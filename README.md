@@ -6,15 +6,33 @@ The project aims to simulate digital logic components from basic gates to more a
 
 ## Current Features
 
-- Signal abstraction
-- Component abstraction
-- Logic gates: AND, OR, XOR, NOT
-- Circuit container
-- Dynamic gate creation with a factory
+- Logic gates
+  - AND
+  - OR
+  - XOR
+  - NOT
+
+- Circuit abstraction
+
+- Dynamic gate creation
+
 - JSON-based circuit descriptions
-- CLI execution from circuit files
-- Half-adder example
-- Full-adder example
+
+- Multi-bit buses
+
+- Binary and hexadecimal visualization
+
+- Ripple-carry multi-bit adder
+
+- Basic ALU operations
+  - ADD
+  - AND
+  - OR
+  - XOR
+
+- Multiplexer support
+
+- CLI-based simulation
 
 ## JSON Circuit Format
 
@@ -65,6 +83,34 @@ mkdir build
 cd build
 cmake ..
 make
+```
+
+## Architecture
+
+The simulator currently follows a layered architecture:
+
+```text
+JSON description
+        ↓
+CircuitParser
+        ↓
+GateFactory
+        ↓
+Circuit / Bus system
+        ↓
+Logic simulation
+
+Higher level components are build heirarchically
+
+Logic Gates
+    ↓
+Half Adders
+    ↓
+Full Adders
+    ↓
+Multi-bit Adders
+    ↓
+ALU structures
 ```
 
 ### Run a circuit
@@ -120,3 +166,16 @@ Planned features include:
   - easy-to-read architecture
   - visualization-friendly simulation
   - beginner-friendly digital logic examples
+
+## Educational Goals
+
+This project is designed as an educational exploration of:
+
+- digital logic
+- computer architecture
+- hardware simulation
+- C++ systems programming
+- low-level computation
+- CPU design fundamentals
+
+The long-term goal is to evolve the simulator toward a small RISC-V-inspired educational architecture.
