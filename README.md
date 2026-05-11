@@ -8,37 +8,76 @@ The project aims to simulate digital logic components from basic gates to more a
 
 - Signal abstraction
 - Component abstraction
-- Logic gates:
-    - AND
-    - OR
-    - NOT
-    - XOR
-- Circuit abstraction
-- Half-adder simulation
+- Logic gates: AND, OR, XOR, NOT
+- Circuit container
+- Dynamic gate creation with a factory
+- JSON-based circuit descriptions
+- CLI execution from circuit files
+- Half-adder example
+- Full-adder example
 
-## Build
+## JSON Circuit Format
+
+Circuits can be described using JSON files.
+
+Example:
+
+```json
+{
+  "signals": [
+    { "name": "A", "initial": true },
+    { "name": "B", "initial": false },
+    { "name": "OUT", "initial": false }
+  ],
+
+  "components": [
+    {
+      "type": "XOR",
+      "name": "XOR_1",
+      "inputs": ["A", "B"],
+      "output": "OUT"
+    }
+  ]
+}
+```
+
+## Supported gate types
+
+- AND
+- OR
+- NOT
+- XOR
+
+### Binary gates use 
+
+"inputs" : ["A", "B"]
+
+### Unary gates use
+
+"input": "A"
+
+## Usage
+
+Build the project:
 
 ```bash
 mkdir build
 cd build
 cmake ..
 make
-./minifpga
 ```
 
-## Example
+### Run a circuit
 
-Current demo:
+./build/minifpga examples/xor_gate.json
 
-```text
-Half adder Truth Table
-A B | SUM CARRY
-----------------
-0 0    0    0
-0 1    1    0
-1 0    1    0
-1 1    0    1
-```
+### Available examples
+
+- ./build/minifpga examples/and_gate.json
+- ./build/minifpga examples/xor_gate.json
+- ./build/minifpga examples/not_gate.json
+- ./build/minifpga examples/half_adder.json
+- ./build/minifpga examples/full_adder.json
 
 ## Project goals
 

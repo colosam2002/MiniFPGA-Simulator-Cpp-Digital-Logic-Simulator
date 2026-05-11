@@ -14,6 +14,10 @@ add_executable(minifpga
     src/gates/OrGate.cpp
     src/gates/XorGate.cpp
     src/gates/NotGate.cpp
+    src/subcircuits/HalfAdder.cpp
+    src/subcircuits/FullAdder.cpp
+    src/factory/GateFactory.cpp
+    src/parser/CircuitParser.cpp
 )
 
 target_include_directories(minifpga PRIVATE

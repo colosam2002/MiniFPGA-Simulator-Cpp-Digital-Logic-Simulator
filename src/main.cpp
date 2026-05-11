@@ -1,62 +1,44 @@
 #include <iostream>
-#include <memory>
+#include <string>
 
-#include "Circuit.hpp"
-#include "gates/AndGate.hpp"
-#include "gates/XorGate.hpp"
+#include "parser/CircuitParser.hpp"
 
-void runHalfAdderCase(
-    Signal& a,
-    Signal& b,
-    Signal& sum,
-    Signal& carry,
-    Circuit& circuit,
-    bool aValue,
-    bool bValue
-) {
-    a.setValue(aValue);
-    b.setValue(bValue);
-
-    circuit.evaluate();
-
-    std::cout << a.getValue()
-              << " "
-              << b.getValue()
-              << " |  "
-              << sum.getValue()
-              << "     "
-              << carry.getValue()
-              << std::endl;
+void printUsage() {
+    std::cout << "Usage:" << std::endl;
+    std::cout << "  ./minifpga <circuit.json>" << std::endl;
 }
 
-void printHalfAdderHeader() {
-    std::cout << "Half Adder Truth Table" << std::endl;
-    std::cout << "A B | SUM CARRY" << std::endl;
-    std::cout << "--------------" << std::endl;
-}
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printUsage();
+        return 1;
+    }
 
-int main() {
-    Circuit circuit;
+    const std::string filepath = argv[1];
 
-    Signal& a = circuit.createSignal("A");
-    Signal& b = circuit.createSignal("B");
-    Signal& sum = circuit.createSignal("SUM");
-    Signal& carry = circuit.createSignal("CARRY");
+    try {
+        Circuit circuit =
+            CircuitParser::parseFromFile(filepath);
 
-    circuit.addComponent(
-        std::make_unique<XorGate>("XOR_SUM", a, b, sum)
-    );
+        std::cout << "Loaded circuit: "
+                  << filepath
+                  << std::endl;
 
-    circuit.addComponent(
-        std::make_unique<AndGate>("AND_CARRY", a, b, carry)
-    );
+        std::cout << "\nInitial signals:" << std::endl;
+        circuit.printSignals();
 
-    printHalfAdderHeader();
+        circuit.evaluate();
 
-    runHalfAdderCase(a, b, sum, carry, circuit, false, false);
-    runHalfAdderCase(a, b, sum, carry, circuit, false, true);
-    runHalfAdderCase(a, b, sum, carry, circuit, true, false);
-    runHalfAdderCase(a, b, sum, carry, circuit, true, true);
+        std::cout << "\nAfter evaluation:" << std::endl;
+        circuit.printSignals();
+    }
+    catch (const std::exception& error) {
+        std::cerr << "Error: "
+                  << error.what()
+                  << std::endl;
+
+        return 1;
+    }
 
     return 0;
 }

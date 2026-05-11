@@ -1,6 +1,7 @@
 #include "Circuit.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
 Signal& Circuit::createSignal(
     const std::string& name,
@@ -10,7 +11,11 @@ Signal& Circuit::createSignal(
         std::make_unique<Signal>(name, initialValue)
     );
 
-    return *signals.back();
+    Signal* signalPtr = signals.back().get();
+
+    signalMap[name] = signalPtr;
+
+    return *signalPtr;
 }
 
 void Circuit::addComponent(std::unique_ptr<Component> component) {
@@ -30,4 +35,18 @@ void Circuit::printSignals() const {
                   << signal->getValue()
                   << std::endl;
     }
+}
+
+Signal& Circuit::getSignal(
+    const std::string& name
+) {
+    auto it = signalMap.find(name);
+
+    if (it == signalMap.end()) {
+        throw std::runtime_error(
+            "Signal not found: " + name
+        );
+    }
+
+    return *(it->second);
 }

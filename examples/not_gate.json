@@ -1,0 +1,15 @@
+{
+  "signals": [
+    { "name": "A", "initial": true },
+    { "name": "OUT", "initial": false }
+  ],
+
+  "components": [
+    {
+      "type": "NOT",
+      "name": "NOT_1",
+      "input": "A",
+      "output": "OUT"
+    }
+  ]
+}
