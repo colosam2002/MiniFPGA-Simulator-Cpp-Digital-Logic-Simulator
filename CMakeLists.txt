@@ -22,6 +22,12 @@ add_executable(minifpga
     src/subcircuits/MultiBitAdder.cpp
     src/subcircuits/BasicALU.cpp
     src/subcircuits/Mux2to1.cpp
+    src/core/Clock.cpp
+    src/sequential/DFlipFlop.cpp
+    src/sequential/Register.cpp
+    src/sequential/BinaryCounter.cpp
+    src/sequential/SequentialComponent.cpp
+    src/core/SimulationEngine.cpp
 )
 
 target_include_directories(minifpga PRIVATE

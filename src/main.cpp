@@ -1,105 +1,64 @@
 #include <iostream>
 
-#include "parser/CircuitParser.hpp"
-#include "subcircuits/BasicALU.hpp"
+#include "core/Bus.hpp"
+#include "core/SimulationEngine.hpp"
 
-void runOperation(
-    BasicALU& alu,
-    ALUOperation operation,
-    const std::string& operationName,
-    Bus& resultBus
-) {
+#include "sequential/BinaryCounter.hpp"
 
-    alu.execute(operation);
+int main() {
+
+    SimulationEngine engine;
+
+    Bus counterBus("COUNTER", 4);
+
+    BinaryCounter counter(
+        counterBus,
+        engine.getClock()
+    );
+
+    engine.registerComponent(counter);
 
     std::cout
-        << operationName
-        << ":" << std::endl;
-
-    resultBus.print();
+        << "Sequential simulation started"
+        << std::endl;
 
     std::cout << std::endl;
-}
 
-int main(int argc, char* argv[]) {
+    for (int cycle = 0; cycle < 20; ++cycle) {
 
-    if (argc < 2) {
-
-        std::cout
-            << "Usage: ./minifpga <file.json>"
-            << std::endl;
-
-        return 1;
-    }
-
-    try {
-
-        Circuit circuit =
-            CircuitParser::parseFromFile(
-                argv[1]
-            );
-
-        Bus& busA =
-            circuit.getBus("BUS_A");
-
-        Bus& busB =
-            circuit.getBus("BUS_B");
-
-        Bus& resultBus =
-            circuit.getBus("RESULT");
+        engine.tick();
 
         std::cout
-            << "Inputs:"
+            << "Cycle "
+            << engine.getTickCount();
+
+        std::cout
+            << " | CLK="
+            << engine.getClock().getState();
+
+        if (
+            engine.getClock().isRisingEdge()
+        ) {
+
+            std::cout
+                << " | Rising Edge";
+        }
+
+        if (
+            engine.getClock().isFallingEdge()
+        ) {
+
+            std::cout
+                << " | Falling Edge";
+        }
+
+        std::cout
             << std::endl;
 
-        busA.print();
-        busB.print();
+        counterBus.print();
 
-        std::cout << std::endl;
-
-        BasicALU alu(
-            busA,
-            busB,
-            resultBus
-        );
-
-        runOperation(
-            alu,
-            ALUOperation::ADD,
-            "ADD",
-            resultBus
-        );
-
-        runOperation(
-            alu,
-            ALUOperation::AND,
-            "AND",
-            resultBus
-        );
-
-        runOperation(
-            alu,
-            ALUOperation::OR,
-            "OR",
-            resultBus
-        );
-
-        runOperation(
-            alu,
-            ALUOperation::XOR,
-            "XOR",
-            resultBus
-        );
-    }
-
-    catch (const std::exception& error) {
-
-        std::cerr
-            << "Error: "
-            << error.what()
+        std::cout
             << std::endl;
-
-        return 1;
     }
 
     return 0;

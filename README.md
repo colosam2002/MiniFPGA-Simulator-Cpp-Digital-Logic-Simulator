@@ -34,6 +34,19 @@ The project aims to simulate digital logic components from basic gates to more a
 
 - CLI-based simulation
 
+## Sequential Logic Features
+
+- Clock system
+- Rising edge detection
+- Falling edge detection
+- D Flip-Flops
+- Multi-bit registers
+- Load / enable signals
+- Binary counters
+- Simulation engine
+- Tick-based simulation
+- Stateful sequential components
+
 ## JSON Circuit Format
 
 Circuits can be described using JSON files.
@@ -113,6 +126,39 @@ Multi-bit Adders
 ALU structures
 ```
 
+## Sequential Simulation Architecture
+
+The simulator now supports sequential digital logic.
+
+Core concepts include:
+
+- global clock synchronization
+- edge-triggered updates
+- persistent component state
+- centralized simulation scheduling
+
+Simulation flow:
+
+```text
+SimulationEngine
+        ↓
+Clock tick
+        ↓
+Sequential component updates
+        ↓
+State propagation
+
+Sequential hierarchy:
+
+Clock
+   ↓
+D Flip-Flops
+   ↓
+Registers
+   ↓
+Counters
+```
+
 ### Run a circuit
 
 ./build/minifpga examples/xor_gate.json
@@ -127,45 +173,13 @@ ALU structures
 
 ## Project Goals
 
-The long-term goal of MiniFPGA Simulator is to evolve from a simple digital logic simulator into a small educational hardware simulation platform.
-
-Planned features include:
-
-- More combinational circuits
-  - multiplexers
-  - decoders
-  - arithmetic units
-
-- Sequential logic support
-  - clock signals
-  - flip-flops
-  - registers
-  - counters
-
-- Memory simulation
-  - RAM blocks
-  - instruction memory
-  - data memory
-
-- Waveform generation
-  - VCD export support
-  - GTKWave compatibility
-
-- Improved circuit description system
-  - hierarchical subcircuits
-  - reusable modules
-  - cleaner HDL-like JSON format
-
-- Small RISC-V-inspired execution core
-  - arithmetic instructions
-  - registers
-  - instruction decoding
-  - simple execution pipeline
-
-- Educational focus
-  - easy-to-read architecture
-  - visualization-friendly simulation
-  - beginner-friendly digital logic examples
+- RAM simulation
+- instruction execution
+- register files
+- instruction decoding
+- small RISC-V-inspired core
+- waveform generation
+- pipeline experimentation
 
 ## Educational Goals
 

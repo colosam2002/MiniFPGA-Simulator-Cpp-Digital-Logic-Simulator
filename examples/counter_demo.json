@@ -1,0 +1,13 @@
+{
+  "signals": [],
+
+  "buses": [
+    {
+      "name": "COUNTER",
+      "width": 4,
+      "initial": 0
+    }
+  ],
+
+  "components": []
+}
