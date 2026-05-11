@@ -30,13 +30,15 @@ make
 
 Current demo:
 
+```text
 Half adder Truth Table
 A B | SUM CARRY
----------------
+
 0 0    0    0
 0 1    1    0
 1 0    1    0
 1 1    0    1
+```
 
 ## Project goals
 
