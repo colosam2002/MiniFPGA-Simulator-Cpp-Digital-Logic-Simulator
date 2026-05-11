@@ -79,13 +79,44 @@ make
 - ./build/minifpga examples/half_adder.json
 - ./build/minifpga examples/full_adder.json
 
-## Project goals
+## Project Goals
 
-Future goals include:
+The long-term goal of MiniFPGA Simulator is to evolve from a simple digital logic simulator into a small educational hardware simulation platform.
 
-- Full adder
-- Sequential circuits
-- Registers
+Planned features include:
+
+- More combinational circuits
+  - multiplexers
+  - decoders
+  - arithmetic units
+
+- Sequential logic support
+  - clock signals
+  - flip-flops
+  - registers
+  - counters
+
 - Memory simulation
-- VCD waveform generation
-- Small RISC-V inspired CPU core
+  - RAM blocks
+  - instruction memory
+  - data memory
+
+- Waveform generation
+  - VCD export support
+  - GTKWave compatibility
+
+- Improved circuit description system
+  - hierarchical subcircuits
+  - reusable modules
+  - cleaner HDL-like JSON format
+
+- Small RISC-V-inspired execution core
+  - arithmetic instructions
+  - registers
+  - instruction decoding
+  - simple execution pipeline
+
+- Educational focus
+  - easy-to-read architecture
+  - visualization-friendly simulation
+  - beginner-friendly digital logic examples
