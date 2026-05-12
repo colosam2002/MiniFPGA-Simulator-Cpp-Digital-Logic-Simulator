@@ -1,65 +1,87 @@
 #include <iostream>
+#include <vector>
 
-#include "core/Bus.hpp"
-#include "core/SimulationEngine.hpp"
+#include "cpu/TinyCPU.hpp"
 
-#include "sequential/BinaryCounter.hpp"
+void printProgramInfo() {
+
+    std::cout
+        << "MiniFPGA TinyCPU Demo"
+        << std::endl;
+
+    std::cout
+        << "====================="
+        << std::endl;
+
+    std::cout << std::endl;
+}
 
 int main() {
 
-    SimulationEngine engine;
+    printProgramInfo();
 
-    Bus counterBus("COUNTER", 4);
+    TinyCPU cpu;
 
-    BinaryCounter counter(
-        counterBus,
-        engine.getClock()
-    );
+    std::vector<Instruction> program = {
 
-    engine.registerComponent(counter);
+        // LOAD R1, 15
+
+        {
+            Opcode::LOAD,
+            1,
+            0,
+            0,
+            15
+        },
+
+        // LOAD R2, 27
+
+        {
+            Opcode::LOAD,
+            2,
+            0,
+            0,
+            27
+        },
+
+        // ADD R3, R1, R2
+
+        {
+            Opcode::ADD,
+            3,
+            1,
+            2,
+            0
+        },
+
+        // MOV R4, R3
+
+        {
+            Opcode::MOV,
+            4,
+            3,
+            0,
+            0
+        }
+    };
 
     std::cout
-        << "Sequential simulation started"
+        << "Loading program..."
         << std::endl;
 
     std::cout << std::endl;
 
-    for (int cycle = 0; cycle < 20; ++cycle) {
+    cpu.loadProgram(program);
 
-        engine.tick();
+    std::cout
+        << "Starting execution..."
+        << std::endl;
 
-        std::cout
-            << "Cycle "
-            << engine.getTickCount();
+    std::cout << std::endl;
 
-        std::cout
-            << " | CLK="
-            << engine.getClock().getState();
+    cpu.run();
 
-        if (
-            engine.getClock().isRisingEdge()
-        ) {
-
-            std::cout
-                << " | Rising Edge";
-        }
-
-        if (
-            engine.getClock().isFallingEdge()
-        ) {
-
-            std::cout
-                << " | Falling Edge";
-        }
-
-        std::cout
-            << std::endl;
-
-        counterBus.print();
-
-        std::cout
-            << std::endl;
-    }
+    cpu.printState();
 
     return 0;
 }

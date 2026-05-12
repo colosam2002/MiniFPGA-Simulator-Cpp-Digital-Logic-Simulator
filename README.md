@@ -47,6 +47,18 @@ The project aims to simulate digital logic components from basic gates to more a
 - Tick-based simulation
 - Stateful sequential components
 
+## CPU Architecture Features
+
+- Register file
+- Instruction execution
+- Program counter
+- Execution unit
+- Instruction sequencing
+- Tiny CPU abstraction
+- Basic instruction set
+- LOAD / MOV / ADD instructions
+- Fetch-decode-execute concepts
+
 ## JSON Circuit Format
 
 Circuits can be described using JSON files.
@@ -159,6 +171,40 @@ Registers
 Counters
 ```
 
+## TinyCPU Architecture
+
+The simulator now includes a minimal CPU-style execution system.
+
+Core concepts implemented:
+
+- program execution
+- instruction sequencing
+- register-based computation
+- execution units
+- instruction decoding
+- program counter flow
+
+Execution cycle:
+
+```text
+FETCH
+  ↓
+DECODE
+  ↓
+EXECUTE
+  ↓
+UPDATE STATE
+```
+
+### CPU hierarchy
+```text
+TinyCPU
+   ├── Program Counter
+   ├── Execution Unit
+   ├── Register File
+   └── Instruction Program
+```
+
 ### Run a circuit
 
 ./build/minifpga examples/xor_gate.json
@@ -193,3 +239,27 @@ This project is designed as an educational exploration of:
 - CPU design fundamentals
 
 The long-term goal is to evolve the simulator toward a small RISC-V-inspired educational architecture.
+
+## Concepts Explored
+
+This project explores concepts from:
+
+- digital logic
+- sequential systems
+- computer architecture
+- CPU design
+- memory systems
+- instruction execution
+- hardware simulation
+- low-level systems programming
+
+## Future goals include:
+
+- memory-mapped execution
+- instruction memory
+- simple assembler
+- RISC-V-inspired instructions
+- branching and jumps
+- stack concepts
+- pipeline experimentation
+- waveform tracing

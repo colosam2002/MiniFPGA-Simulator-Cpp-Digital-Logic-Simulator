@@ -28,6 +28,12 @@ add_executable(minifpga
     src/sequential/BinaryCounter.cpp
     src/sequential/SequentialComponent.cpp
     src/core/SimulationEngine.cpp
+    src/memory/RAM.cpp
+    src/memory/RegisterFile.cpp
+    src/memory/MemoryInterface.cpp
+    src/cpu/Instruction.cpp
+    src/cpu/ExecutionUnit.cpp
+    src/cpu/TinyCPU.cpp
 )
 
 target_include_directories(minifpga PRIVATE
