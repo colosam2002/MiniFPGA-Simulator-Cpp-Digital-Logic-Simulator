@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-TinyCPU::TinyCPU() : registerFile(8, 8), executionUnit(registerFile, flags), programCounter(0) {}
+TinyCPU::TinyCPU() : registerFile(8, 8), stackMemory(16), flags(), executionUnit(registerFile, flags, stackMemory), programCounter(0) {}
 
 void TinyCPU::loadProgram(const std::vector<Instruction>& instructions) {
     program = instructions;
@@ -30,13 +30,28 @@ void TinyCPU::step() {
         << opcodeToString(instruction.opcode)
         << std::endl;
 
-    ExecutionResult result = executionUnit.execute(instruction);
+    std::cout
+        << "--------------------------------"
+        << std::endl;
+
+    ExecutionResult result = executionUnit.execute(instruction, programCounter);
 
     registerFile.printRegisters();
 
     std::cout << std::endl;
 
     flags.printFlags();
+
+    std::cout << std::endl;
+
+    stackMemory.printStack();
+
+    std::cout << std::endl;
+
+    std::cout
+        << "SP = "
+        << stackMemory.getStackPointer()
+        << std::endl;
 
     std::cout << std::endl;
 
@@ -69,7 +84,7 @@ void TinyCPU::printState() const {
         << std::endl;
 
     std::cout
-        << "FINAL CPU STATE"
+        << "FINAL CPU + STACK STATE"
         << std::endl;
 
     std::cout
@@ -90,6 +105,26 @@ void TinyCPU::printState() const {
         << std::endl;
 
     flags.printFlags();
+
+    std::cout << std::endl;
+
+    stackMemory.printStack();
+
+    std::cout << std::endl;
+
+    std::cout
+        << "SP = "
+        << stackMemory.getStackPointer()
+        << std::endl;
+
+    stackMemory.printStack();
+
+    std::cout << std::endl;
+
+    std::cout
+        << "SP = "
+        << stackMemory.getStackPointer()
+        << std::endl;
 
     std::cout
         << std::endl;

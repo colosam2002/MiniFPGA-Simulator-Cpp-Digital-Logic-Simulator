@@ -14,6 +14,12 @@ void printBanner() {
         << std::endl;
 
     std::cout << std::endl;
+
+    std::cout
+        << "Stack + Function Execution Demo"
+        << std::endl;
+
+    std::cout << std::endl;
 }
 
 int main() {
@@ -24,66 +30,122 @@ int main() {
 
     std::vector<Instruction> program = {
 
-        // LOAD R1, 3
+        // =========================
+        // MAIN PROGRAM
+        // =========================
+
+        // LOAD R1, 20
 
         {
             Opcode::LOAD,
             1,
             0,
             0,
-            3
+            20
         },
 
-        // LOAD R2, 1
+        // LOAD R2, 22
 
         {
             Opcode::LOAD,
             2,
             0,
             0,
-            1
+            22
         },
 
-        // LOOP START
-
-        // SUB R1, R1, R2
+        // CALL FUNCTION
 
         {
-            Opcode::SUB,
-            1,
+            Opcode::CALL,
+            0,
+            0,
+            0,
+            6
+        },
+
+        // LOAD R5, 99
+
+        {
+            Opcode::LOAD,
+            5,
+            0,
+            0,
+            99
+        },
+
+        // END PROGRAM
+
+        {
+            Opcode::JMP,
+            0,
+            0,
+            0,
+            11
+        },
+
+        // UNUSED
+
+        {
+            Opcode::LOAD,
+            0,
+            0,
+            0,
+            0
+        },
+
+        // =========================
+        // FUNCTION
+        // =========================
+
+        // ADD R3, R1, R2
+
+        {
+            Opcode::ADD,
+            3,
             1,
             2,
             0
         },
 
-        // CMP R1, R0
+        // MOV R4, R3
 
         {
-            Opcode::CMP,
-            0,
-            1,
-            0,
-            0
-        },
-
-        // JNE 2
-
-        {
-            Opcode::JNE,
-            0,
-            0,
-            0,
-            2
-        },
-
-        // LOAD R3, 42
-
-        {
-            Opcode::LOAD,
+            Opcode::MOV,
+            4,
             3,
             0,
+            0
+        },
+
+        // PUSH R4
+
+        {
+            Opcode::PUSH,
             0,
-            42
+            4,
+            0,
+            0
+        },
+
+        // POP R6
+
+        {
+            Opcode::POP,
+            6,
+            0,
+            0,
+            0
+        },
+
+        // RET
+
+        {
+            Opcode::RET,
+            0,
+            0,
+            0,
+            0
         }
     };
 

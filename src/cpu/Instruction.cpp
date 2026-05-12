@@ -28,6 +28,18 @@ const char* opcodeToString(Opcode opcode) {
         case Opcode::JNE:
             return "JNE";
 
+        case Opcode::PUSH:
+            return "PUSH";
+
+        case Opcode::POP:
+            return "POP";
+
+        case Opcode::CALL:
+            return "CALL";
+
+        case Opcode::RET:
+            return "RET";
+
         default:
             return "UNKNOWN";
     }

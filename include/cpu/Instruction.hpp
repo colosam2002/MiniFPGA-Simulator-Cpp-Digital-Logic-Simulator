@@ -1,7 +1,7 @@
 #ifndef INSTRUCTION_HPP
 #define INSTRUCTION_HPP
 
-enum class Opcode {LOAD, MOV, ADD, SUB, CMP, JMP, JE, JNE};
+enum class Opcode {LOAD, MOV, ADD, SUB, CMP, JMP, JE, JNE, PUSH, POP, CALL, RET};
 
 struct Instruction {
     Opcode opcode;

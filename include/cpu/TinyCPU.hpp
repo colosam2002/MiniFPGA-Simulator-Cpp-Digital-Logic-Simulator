@@ -7,6 +7,7 @@
 #include "cpu/CPUFlags.hpp"
 
 #include "memory/RegisterFile.hpp"
+#include "memory/StackMemory.hpp"
 
 class TinyCPU {
     private:
@@ -19,6 +20,8 @@ class TinyCPU {
         unsigned int programCounter;
 
         CPUFlags flags;
+
+        StackMemory stackMemory;
 
     public:
         TinyCPU();

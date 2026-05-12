@@ -71,6 +71,18 @@ The project aims to simulate digital logic components from basic gates to more a
 - Loop execution
 - CPU state tracing
 
+## Stack & Function Execution
+
+The TinyCPU now supports:
+
+- stack memory
+- stack pointer
+- PUSH / POP instructions
+- CALL / RET execution
+- subroutine flow
+- return address handling
+- stack-aware execution tracing
+
 ## JSON Circuit Format
 
 Circuits can be described using JSON files.
@@ -217,6 +229,60 @@ TinyCPU
    └── Instruction Program
 ```
 
+## Function Execution Model
+
+The simulator now supports basic subroutine execution.
+
+Execution flow:
+
+```text
+CALL
+  ↓
+Save return address
+  ↓
+Jump to function
+  ↓
+Execute function body
+  ↓
+RET
+  ↓
+Restore execution flow
+
+Stack based execution
+
+MAIN
+  ↓
+CALL
+  ↓
+STACK SAVE
+  ↓
+FUNCTION
+  ↓
+RET
+  ↓
+RESTORE FLOW
+```
+
+## Instruction set
+
+Arithmetic:
+- LOAD
+- MOV
+- ADD
+- SUB
+
+Comparison & Branching:
+- CMP
+- JMP
+- JE
+- JNE
+
+Stack & Functions:
+- PUSH
+- POP
+- CALL
+- RET
+
 ### Run a circuit
 
 ./build/minifpga examples/xor_gate.json
@@ -229,15 +295,16 @@ TinyCPU
 - ./build/minifpga examples/half_adder.json
 - ./build/minifpga examples/full_adder.json
 
-## Project Goals
+## Future goals include:
 
-- RAM simulation
-- instruction execution
-- register files
+- instruction memory
+- assembler support
+- memory-mapped programs
+- RISC-V-inspired ISA
+- simple parser for assembly-like syntax
 - instruction decoding
-- small RISC-V-inspired core
-- waveform generation
 - pipeline experimentation
+- hazard simulation
 
 ## Educational Goals
 
@@ -264,14 +331,3 @@ This project explores concepts from:
 - instruction execution
 - hardware simulation
 - low-level systems programming
-
-## Future goals include:
-
-- stack operations
-- CALL / RET instructions
-- instruction memory
-- simple assembler
-- memory-mapped execution
-- RISC-V-inspired ISA
-- pipeline experimentation
-- hazard simulation
