@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-TinyCPU::TinyCPU() : registerFile(8, 8), executionUnit(registerFile), programCounter(0) {}
+TinyCPU::TinyCPU() : registerFile(8, 8), executionUnit(registerFile, flags), programCounter(0) {}
 
 void TinyCPU::loadProgram(const std::vector<Instruction>& instructions) {
     program = instructions;
@@ -18,11 +18,38 @@ void TinyCPU::step() {
 
     const Instruction& instruction = program[programCounter];
 
-    std::cout << "Executing instruction " << programCounter << std::endl;
+    std::cout << "--------------------------------" << std::endl;
 
-    executionUnit.execute(instruction);
+    std::cout
+        << "PC = "
+        << programCounter
+        << std::endl;
 
-    ++programCounter;
+    std::cout
+        << "Executing: "
+        << opcodeToString(instruction.opcode)
+        << std::endl;
+
+    ExecutionResult result = executionUnit.execute(instruction);
+
+    registerFile.printRegisters();
+
+    std::cout << std::endl;
+
+    flags.printFlags();
+
+    std::cout << std::endl;
+
+    if (result.jumpRequested) {
+        std::cout
+        << "Jumping to instruction "
+        << result.jumpAddress
+        << std::endl;
+        programCounter = result.jumpAddress;
+    }
+    else {
+        ++programCounter;
+    }
 }
 
 void TinyCPU::run() {
@@ -34,15 +61,36 @@ void TinyCPU::run() {
 
 void TinyCPU::printState() const {
 
-    std::cout << std::endl;
+    std::cout
+        << std::endl;
 
-    std::cout << "CPU State" << std::endl;
+    std::cout
+        << "================================"
+        << std::endl;
 
-    std::cout << "Program Counter = " << programCounter << std::endl;
+    std::cout
+        << "FINAL CPU STATE"
+        << std::endl;
 
-    std::cout << std::endl;
+    std::cout
+        << "================================"
+        << std::endl;
+
+    std::cout
+        << "Program Counter = "
+        << programCounter
+        << std::endl;
+
+    std::cout
+        << std::endl;
 
     registerFile.printRegisters();
 
-    std::cout << std::endl;
+    std::cout
+        << std::endl;
+
+    flags.printFlags();
+
+    std::cout
+        << std::endl;
 }

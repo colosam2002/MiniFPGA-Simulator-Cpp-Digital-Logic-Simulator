@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "cpu/ExecutionUnit.hpp"
+#include "cpu/CPUFlags.hpp"
 
 #include "memory/RegisterFile.hpp"
 
@@ -16,6 +17,8 @@ class TinyCPU {
         std::vector<Instruction> program;
 
         unsigned int programCounter;
+
+        CPUFlags flags;
 
     public:
         TinyCPU();

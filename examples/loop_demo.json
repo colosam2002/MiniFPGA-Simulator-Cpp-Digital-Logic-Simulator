@@ -1,0 +1,29 @@
+{
+  "program": [
+    {
+      "opcode": "LOAD",
+      "destination": 1,
+      "immediate": 5
+    },
+    {
+      "opcode": "LOAD",
+      "destination": 2,
+      "immediate": 1
+    },
+    {
+      "opcode": "SUB",
+      "destination": 1,
+      "source1": 1,
+      "source2": 2
+    },
+    {
+      "opcode": "CMP",
+      "source1": 1,
+      "source2": 0
+    },
+    {
+      "opcode": "JNE",
+      "immediate": 2
+    }
+  ]
+}

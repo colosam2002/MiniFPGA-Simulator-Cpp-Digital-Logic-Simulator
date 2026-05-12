@@ -3,14 +3,14 @@
 
 #include "cpu/TinyCPU.hpp"
 
-void printProgramInfo() {
+void printBanner() {
 
     std::cout
-        << "MiniFPGA TinyCPU Demo"
+        << "MiniFPGA TinyCPU"
         << std::endl;
 
     std::cout
-        << "====================="
+        << "================="
         << std::endl;
 
     std::cout << std::endl;
@@ -18,50 +18,72 @@ void printProgramInfo() {
 
 int main() {
 
-    printProgramInfo();
+    printBanner();
 
     TinyCPU cpu;
 
     std::vector<Instruction> program = {
 
-        // LOAD R1, 15
+        // LOAD R1, 3
 
         {
             Opcode::LOAD,
             1,
             0,
             0,
-            15
+            3
         },
 
-        // LOAD R2, 27
+        // LOAD R2, 1
 
         {
             Opcode::LOAD,
             2,
             0,
             0,
-            27
+            1
         },
 
-        // ADD R3, R1, R2
+        // LOOP START
+
+        // SUB R1, R1, R2
 
         {
-            Opcode::ADD,
-            3,
+            Opcode::SUB,
+            1,
             1,
             2,
             0
         },
 
-        // MOV R4, R3
+        // CMP R1, R0
 
         {
-            Opcode::MOV,
-            4,
-            3,
+            Opcode::CMP,
+            0,
+            1,
             0,
             0
+        },
+
+        // JNE 2
+
+        {
+            Opcode::JNE,
+            0,
+            0,
+            0,
+            2
+        },
+
+        // LOAD R3, 42
+
+        {
+            Opcode::LOAD,
+            3,
+            0,
+            0,
+            42
         }
     };
 

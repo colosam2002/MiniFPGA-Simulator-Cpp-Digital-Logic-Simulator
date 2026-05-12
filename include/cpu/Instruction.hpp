@@ -1,7 +1,7 @@
 #ifndef INSTRUCTION_HPP
 #define INSTRUCTION_HPP
 
-enum class Opcode {LOAD, MOV, ADD};
+enum class Opcode {LOAD, MOV, ADD, SUB, CMP, JMP, JE, JNE};
 
 struct Instruction {
     Opcode opcode;
@@ -14,5 +14,9 @@ struct Instruction {
 
     unsigned int immediate;
 };
+
+const char* opcodeToString(
+    Opcode opcode
+);
 
 #endif

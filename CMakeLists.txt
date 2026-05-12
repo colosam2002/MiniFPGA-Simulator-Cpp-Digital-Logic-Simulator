@@ -34,6 +34,8 @@ add_executable(minifpga
     src/cpu/Instruction.cpp
     src/cpu/ExecutionUnit.cpp
     src/cpu/TinyCPU.cpp
+    src/cpu/CPUFlags.cpp
+    src/cpu/ExecutionResult.cpp
 )
 
 target_include_directories(minifpga PRIVATE

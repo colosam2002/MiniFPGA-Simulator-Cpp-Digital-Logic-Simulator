@@ -56,8 +56,20 @@ The project aims to simulate digital logic components from basic gates to more a
 - Instruction sequencing
 - Tiny CPU abstraction
 - Basic instruction set
-- LOAD / MOV / ADD instructions
+- LOAD / MOV / ADD / SUB / CMP / JNE / JE instructions
 - Fetch-decode-execute concepts
+
+## Control Flow Features
+
+- CPU flags
+- Zero flag
+- CMP instruction
+- JMP instruction
+- JE / JNE branching
+- Conditional execution
+- Dynamic program flow
+- Loop execution
+- CPU state tracing
 
 ## JSON Circuit Format
 
@@ -255,11 +267,11 @@ This project explores concepts from:
 
 ## Future goals include:
 
-- memory-mapped execution
+- stack operations
+- CALL / RET instructions
 - instruction memory
 - simple assembler
-- RISC-V-inspired instructions
-- branching and jumps
-- stack concepts
+- memory-mapped execution
+- RISC-V-inspired ISA
 - pipeline experimentation
-- waveform tracing
+- hazard simulation
