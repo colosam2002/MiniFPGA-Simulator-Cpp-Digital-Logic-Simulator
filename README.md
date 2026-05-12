@@ -1,333 +1,168 @@
-# MiniFPGA Simulator
+# MiniFPGA TinyCPU Emulator
 
-MiniFPGA Simulator is an educational C++ digital logic simulator inspired by FPGA-style circuits.
+A C++ educational CPU and digital logic simulator inspired by FPGA systems, computer architecture and low-level execution models.
 
-The project aims to simulate digital logic components from basic gates to more advanced sequential systems and eventually a small RISC-V inspired execution core. 
+The project evolved from basic logic gates into a small educational CPU emulator supporting:
 
-## Current Features
+- branching
+- stack execution
+- CALL / RET
+- instruction memory
+- assembly-like syntax
+- external program loading
 
-- Logic gates
-  - AND
-  - OR
-  - XOR
-  - NOT
+## Current Capabilities
 
-- Circuit abstraction
+The emulator currently supports:
 
-- Dynamic gate creation
+- digital logic simulation
+- RAM and register-based execution
+- stack-based execution flow
+- CALL / RET subroutines
+- branching and loops
+- instruction memory
+- assembly-like syntax
+- external assembly program loading
+- instruction decoding and execution tracing
 
-- JSON-based circuit descriptions
+## Architecture Overview
 
-- Multi-bit buses
-
-- Binary and hexadecimal visualization
-
-- Ripple-carry multi-bit adder
-
-- Basic ALU operations
-  - ADD
-  - AND
-  - OR
-  - XOR
-
-- Multiplexer support
-
-- CLI-based simulation
-
-## Sequential Logic Features
-
-- Clock system
-- Rising edge detection
-- Falling edge detection
-- D Flip-Flops
-- Multi-bit registers
-- Load / enable signals
-- Binary counters
-- Simulation engine
-- Tick-based simulation
-- Stateful sequential components
-
-## CPU Architecture Features
-
-- Register file
-- Instruction execution
-- Program counter
-- Execution unit
-- Instruction sequencing
-- Tiny CPU abstraction
-- Basic instruction set
-- LOAD / MOV / ADD / SUB / CMP / JNE / JE instructions
-- Fetch-decode-execute concepts
-
-## Control Flow Features
-
-- CPU flags
-- Zero flag
-- CMP instruction
-- JMP instruction
-- JE / JNE branching
-- Conditional execution
-- Dynamic program flow
-- Loop execution
-- CPU state tracing
-
-## Stack & Function Execution
-
-The TinyCPU now supports:
-
-- stack memory
-- stack pointer
-- PUSH / POP instructions
-- CALL / RET execution
-- subroutine flow
-- return address handling
-- stack-aware execution tracing
-
-## JSON Circuit Format
-
-Circuits can be described using JSON files.
-
-Example:
-
-```json
-{
-  "signals": [
-    { "name": "A", "initial": true },
-    { "name": "B", "initial": false },
-    { "name": "OUT", "initial": false }
-  ],
-
-  "components": [
-    {
-      "type": "XOR",
-      "name": "XOR_1",
-      "inputs": ["A", "B"],
-      "output": "OUT"
-    }
-  ]
-}
-```
-
-## Supported gate types
-
-- AND
-- OR
-- NOT
-- XOR
-
-### Binary gates use 
-
-"inputs" : ["A", "B"]
-
-### Unary gates use
-
-"input": "A"
-
-## Usage
-
-Build the project:
-
-```bash
-mkdir build
-cd build
-cmake ..
-make
-```
-
-## Architecture
-
-The simulator currently follows a layered architecture:
+Execution pipeline:
 
 ```text
-JSON description
+Assembly Program
         ↓
-CircuitParser
+Program Loader
         ↓
-GateFactory
+Instruction Decoder
         ↓
-Circuit / Bus system
+Instruction Memory
         ↓
-Logic simulation
-
-Higher level components are build heirarchically
-
-Logic Gates
-    ↓
-Half Adders
-    ↓
-Full Adders
-    ↓
-Multi-bit Adders
-    ↓
-ALU structures
+TinyCPU Execution
+        ↓
+Registers / Stack / Flags
 ```
 
-## Sequential Simulation Architecture
+## TinyCPU Features
 
-The simulator now supports sequential digital logic.
-
-Core concepts include:
-
-- global clock synchronization
-- edge-triggered updates
-- persistent component state
-- centralized simulation scheduling
-
-Simulation flow:
-
-```text
-SimulationEngine
-        ↓
-Clock tick
-        ↓
-Sequential component updates
-        ↓
-State propagation
-
-Sequential hierarchy:
-
-Clock
-   ↓
-D Flip-Flops
-   ↓
-Registers
-   ↓
-Counters
-```
-
-## TinyCPU Architecture
-
-The simulator now includes a minimal CPU-style execution system.
-
-Core concepts implemented:
-
-- program execution
-- instruction sequencing
-- register-based computation
-- execution units
-- instruction decoding
-- program counter flow
-
-Execution cycle:
-
-```text
-FETCH
-  ↓
-DECODE
-  ↓
-EXECUTE
-  ↓
-UPDATE STATE
-```
-
-### CPU hierarchy
-```text
-TinyCPU
-   ├── Program Counter
-   ├── Execution Unit
-   ├── Register File
-   └── Instruction Program
-```
-
-## Function Execution Model
-
-The simulator now supports basic subroutine execution.
-
-Execution flow:
-
-```text
-CALL
-  ↓
-Save return address
-  ↓
-Jump to function
-  ↓
-Execute function body
-  ↓
-RET
-  ↓
-Restore execution flow
-
-Stack based execution
-
-MAIN
-  ↓
-CALL
-  ↓
-STACK SAVE
-  ↓
-FUNCTION
-  ↓
-RET
-  ↓
-RESTORE FLOW
-```
-
-## Instruction set
-
-Arithmetic:
+### Arithmetic Instructions
 - LOAD
 - MOV
 - ADD
 - SUB
 
-Comparison & Branching:
+### Branching Instructions
 - CMP
 - JMP
 - JE
 - JNE
 
-Stack & Functions:
+### Stack Instructions
 - PUSH
 - POP
+
+### Function Execution
 - CALL
 - RET
 
-### Run a circuit
-
-./build/minifpga examples/xor_gate.json
-
-### Available examples
-
-- ./build/minifpga examples/and_gate.json
-- ./build/minifpga examples/xor_gate.json
-- ./build/minifpga examples/not_gate.json
-- ./build/minifpga examples/half_adder.json
-- ./build/minifpga examples/full_adder.json
-
-## Future goals include:
+## Emulator Features
 
 - instruction memory
-- assembler support
-- memory-mapped programs
-- RISC-V-inspired ISA
-- simple parser for assembly-like syntax
+- execution tracing
+- assembly-like syntax
+- external program loading
 - instruction decoding
-- pipeline experimentation
-- hazard simulation
+- stack-aware execution
+- function execution model
+- program counter tracing
 
-## Educational Goals
+## Example Assembly Program
 
-This project is designed as an educational exploration of:
+```asm
+LOAD R1 5
+LOAD R2 1
 
-- digital logic
-- computer architecture
-- hardware simulation
-- C++ systems programming
-- low-level computation
-- CPU design fundamentals
+CALL 5
 
-The long-term goal is to evolve the simulator toward a small RISC-V-inspired educational architecture.
+LOAD R5 99
 
-## Concepts Explored
+JMP 13
 
-This project explores concepts from:
+LOAD R0 0
 
-- digital logic
-- sequential systems
-- computer architecture
-- CPU design
-- memory systems
-- instruction execution
-- hardware simulation
-- low-level systems programming
+SUB R1 R1 R2
+
+CMP R1 R0
+
+JNE 6
+
+LOAD R3 42
+
+PUSH R3
+POP R4
+
+RET
+```
+
+## Build Instructions
+
+```bash
+mkdir build
+cd build
+
+cmake ..
+make
+
+./minifpga
+```
+
+## Command Line Usage
+
+Run logic circuit simulations:
+
+```bash
+./build/minifpga examples/and_gate.json
+```
+
+Run TinyCPU assembly programs:
+
+```bash
+./build/minifpga examples/loop_function.asm
+```
+
+## Running Assembly Programs
+
+Assembly programs are stored in:
+
+```text
+examples/*.asm
+```
+
+The emulator loads programs through the `ProgramLoader` system and executes them through the TinyCPU execution pipeline.
+
+## Learning Goals
+
+This project was built by Colomán Samprón to deeply understand:
+
+- low-level systems programming in C++
+- CPU execution flow
+- stack-based execution
+- instruction decoding
+- assembly semantics
+- memory organization
+- emulator architecture
+- digital logic simulation
+- computer architecture fundamentals
+
+## Future Improvements
+
+Possible future extensions include:
+
+- RISC-V inspired ISA
+- pipeline simulation
+- hazard detection
+- memory-mapped execution
+- instruction encoding
+- assembler improvements
+- recursive function support
+- simple cache simulation

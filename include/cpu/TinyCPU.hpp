@@ -5,6 +5,7 @@
 
 #include "cpu/ExecutionUnit.hpp"
 #include "cpu/CPUFlags.hpp"
+#include "cpu/InstructionMemory.hpp"
 
 #include "memory/RegisterFile.hpp"
 #include "memory/StackMemory.hpp"
@@ -15,13 +16,13 @@ class TinyCPU {
 
         ExecutionUnit executionUnit;
 
-        std::vector<Instruction> program;
-
-        unsigned int programCounter;
-
         CPUFlags flags;
 
         StackMemory stackMemory;
+
+        InstructionMemory instructionMemory;
+
+        unsigned int programCounter;
 
     public:
         TinyCPU();

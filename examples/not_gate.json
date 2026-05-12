@@ -4,6 +4,8 @@
     { "name": "OUT", "initial": false }
   ],
 
+  "buses": [],
+
   "components": [
     {
       "type": "NOT",

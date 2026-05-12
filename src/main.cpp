@@ -1,171 +1,117 @@
 #include <iostream>
-#include <vector>
+#include <string>
 
+#include "parser/CircuitParser.hpp"
+
+#include "cpu/ProgramLoader.hpp"
 #include "cpu/TinyCPU.hpp"
 
-void printBanner() {
+bool endsWith(const std::string& text, const std::string& suffix) {
+    if (suffix.size() > text.size()) {
+        return false;
+    }
 
-    std::cout
-        << "MiniFPGA TinyCPU"
-        << std::endl;
-
-    std::cout
-        << "================="
-        << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout
-        << "Stack + Function Execution Demo"
-        << std::endl;
-
-    std::cout << std::endl;
+    return text.compare(
+        text.size() - suffix.size(),
+        suffix.size(),
+        suffix
+    ) == 0;
 }
 
-int main() {
+void printUsage() {
+    std::cout << "Usage:" << std::endl;
+    std::cout << "  ./minifpga <file.json>" << std::endl;
+    std::cout << "  ./minifpga <file.asm>" << std::endl;
+}
 
-    printBanner();
+void runJsonCircuit(const std::string& filepath) {
+    Circuit circuit =
+        CircuitParser::parseFromFile(filepath);
+
+    std::cout
+        << "Loaded logic circuit: "
+        << filepath
+        << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "Initial signals:" << std::endl;
+    circuit.printSignals();
+
+    std::cout << std::endl;
+
+    std::cout << "Initial buses:" << std::endl;
+    circuit.printBuses();
+
+    circuit.evaluate();
+
+    std::cout << std::endl;
+
+    std::cout << "After evaluation:" << std::endl;
+    circuit.printSignals();
+
+    std::cout << std::endl;
+
+    circuit.printBuses();
+}
+
+void runAssemblyProgram(const std::string& filepath) {
+    std::cout
+        << "Loaded assembly program: "
+        << filepath
+        << std::endl;
+
+    std::cout << std::endl;
 
     TinyCPU cpu;
 
-    std::vector<Instruction> program = {
-
-        // =========================
-        // MAIN PROGRAM
-        // =========================
-
-        // LOAD R1, 20
-
-        {
-            Opcode::LOAD,
-            1,
-            0,
-            0,
-            20
-        },
-
-        // LOAD R2, 22
-
-        {
-            Opcode::LOAD,
-            2,
-            0,
-            0,
-            22
-        },
-
-        // CALL FUNCTION
-
-        {
-            Opcode::CALL,
-            0,
-            0,
-            0,
-            6
-        },
-
-        // LOAD R5, 99
-
-        {
-            Opcode::LOAD,
-            5,
-            0,
-            0,
-            99
-        },
-
-        // END PROGRAM
-
-        {
-            Opcode::JMP,
-            0,
-            0,
-            0,
-            11
-        },
-
-        // UNUSED
-
-        {
-            Opcode::LOAD,
-            0,
-            0,
-            0,
-            0
-        },
-
-        // =========================
-        // FUNCTION
-        // =========================
-
-        // ADD R3, R1, R2
-
-        {
-            Opcode::ADD,
-            3,
-            1,
-            2,
-            0
-        },
-
-        // MOV R4, R3
-
-        {
-            Opcode::MOV,
-            4,
-            3,
-            0,
-            0
-        },
-
-        // PUSH R4
-
-        {
-            Opcode::PUSH,
-            0,
-            4,
-            0,
-            0
-        },
-
-        // POP R6
-
-        {
-            Opcode::POP,
-            6,
-            0,
-            0,
-            0
-        },
-
-        // RET
-
-        {
-            Opcode::RET,
-            0,
-            0,
-            0,
-            0
-        }
-    };
-
-    std::cout
-        << "Loading program..."
-        << std::endl;
-
-    std::cout << std::endl;
+    std::vector<Instruction> program = ProgramLoader::loadProgram(filepath);
 
     cpu.loadProgram(program);
 
-    std::cout
-        << "Starting execution..."
-        << std::endl;
-
+    std::cout << std::endl;
+    std::cout << "Starting TinyCPU execution..." << std::endl;
     std::cout << std::endl;
 
     cpu.run();
 
     cpu.printState();
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printUsage();
+        return 1;
+    }
+
+    const std::string filepath = argv[1];
+
+    try {
+        if (endsWith(filepath, ".json")) {
+            runJsonCircuit(filepath);
+        }
+        else if (endsWith(filepath, ".asm")) {
+            runAssemblyProgram(filepath);
+        }
+        else {
+            std::cerr
+                << "Unsupported file type: "
+                << filepath
+                << std::endl;
+
+            printUsage();
+
+            return 1;
+        }
+    }
+    catch (const std::exception& error) {
+        std::cerr
+            << "Error: "
+            << error.what()
+            << std::endl;
+
+        return 1;
+    }
 
     return 0;
 }

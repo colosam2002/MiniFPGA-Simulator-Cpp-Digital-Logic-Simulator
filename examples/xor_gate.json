@@ -1,9 +1,11 @@
 {
   "signals": [
     { "name": "A", "initial": true },
-    { "name": "B", "initial": false },
+    { "name": "B", "initial": true },
     { "name": "OUT", "initial": false }
   ],
+
+  "buses": [],
 
   "components": [
     {
