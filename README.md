@@ -2,15 +2,6 @@
 
 A C++ educational CPU and digital logic simulator inspired by FPGA systems, computer architecture and low-level execution models.
 
-The project evolved from basic logic gates into a small educational CPU emulator supporting:
-
-- branching
-- stack execution
-- CALL / RET
-- instruction memory
-- assembly-like syntax
-- external program loading
-
 ## Current Capabilities
 
 The emulator currently supports:
@@ -29,52 +20,22 @@ The emulator currently supports:
 
 Execution pipeline:
 
-```text
-Assembly Program
-        ↓
-Program Loader
-        ↓
-Instruction Decoder
-        ↓
-Instruction Memory
-        ↓
-TinyCPU Execution
-        ↓
-Registers / Stack / Flags
-```
+1. Assembly Program
+2. Program Loader
+3. Instruction Decoder
+4. Instruction Memory
+5. TinyCPU Execution
+6. Registers / Stack / Flags
+
 
 ## TinyCPU Features
 
-### Arithmetic Instructions
-- LOAD
-- MOV
-- ADD
-- SUB
-
-### Branching Instructions
-- CMP
-- JMP
-- JE
-- JNE
-
-### Stack Instructions
-- PUSH
-- POP
-
-### Function Execution
-- CALL
-- RET
-
-## Emulator Features
-
-- instruction memory
-- execution tracing
-- assembly-like syntax
-- external program loading
-- instruction decoding
-- stack-aware execution
-- function execution model
-- program counter tracing
+| Category                | Instructions              |
+|------------------------|--------------------------|
+| Arithmetic Instructions | LOAD, MOV, ADD, SUB     |
+| Branching Instructions  | CMP, JMP, JE, JNE       |
+| Stack Instructions      | PUSH, POP               |
+| Function Execution      | CALL, RET               |
 
 ## Example Assembly Program
 
@@ -130,17 +91,16 @@ Run TinyCPU assembly programs:
 ./build/minifpga examples/loop_function.asm
 ```
 
-## Running Assembly Programs
-
 Assembly programs are stored in:
 
 ```text
 examples/*.asm
+examples/*.json
 ```
 
 The emulator loads programs through the `ProgramLoader` system and executes them through the TinyCPU execution pipeline.
 
-## Learning Goals
+## Project Goals
 
 This project was built by Colomán Samprón to deeply understand:
 
