@@ -7,6 +7,9 @@
 #include "cpu/CPUFlags.hpp"
 #include "cpu/InstructionMemory.hpp"
 #include "cpu/CPUStage.hpp"
+#include "cpu/ControlUnit.hpp"
+#include "cpu/Datapath.hpp"
+#include "cpu/SimpleALU.hpp"
 
 #include "memory/RegisterFile.hpp"
 #include "memory/StackMemory.hpp"
@@ -29,13 +32,17 @@ class TinyCPU {
 
         unsigned long cycleCount;
 
-        unsigned int executionResult;
-
-        unsigned int operandA;
-
-        unsigned int operandB;
-
         Instruction currentInstruction;
+
+        ControlUnit controlUnit;
+
+        ControlSignals currentControlSignals;
+
+        Datapath datapath;
+
+        SimpleALU alu;
+
+        unsigned long instructionsRetired;
 
     public:
         TinyCPU();

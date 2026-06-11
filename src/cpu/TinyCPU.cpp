@@ -11,25 +11,29 @@ TinyCPU::TinyCPU()
       programCounter(0),
       currentStage(CPUStage::FETCH),
       cycleCount(0),
-      executionResult(0),
-      operandA(0),
-      operandB(0),
       currentInstruction{
             Opcode::LOAD,
             0,
             0,
             0,
             0
-        }
+        }, 
+        currentControlSignals{
+            false,
+            false,
+            false
+        },
+        datapath(),
+        alu(),
+        instructionsRetired(0)
 {}
 void TinyCPU::loadProgram(const std::vector<Instruction>& instructions) {
     currentStage = CPUStage::FETCH;
-    operandA = 0;
-    operandB = 0;
     cycleCount = 0;
-    executionResult = 0;
+    datapath.reset();
     instructionMemory.loadProgram(instructions);
     programCounter = 0;
+    instructionsRetired = 0;
 
     instructionMemory.printProgram();
 }
@@ -151,7 +155,31 @@ void TinyCPU::printState() const {
         << "SP = "
         << stackMemory.getStackPointer()
         << std::endl;
+    
     std::cout
+        << "Instructions Retired: "
+        << instructionsRetired
+        << std::endl;
+
+    double ipc = 0.0;
+
+    if (cycleCount > 0) {
+
+        ipc =
+            static_cast<double>(
+                instructionsRetired
+            )
+
+            /
+
+            static_cast<double>(
+                cycleCount
+            );
+    }
+
+    std::cout
+        << "IPC: "
+        << ipc
         << std::endl;
 }
 
@@ -197,7 +225,7 @@ void TinyCPU::printMicroState() const {
             << "WRITEBACK -> R"
             << currentInstruction.destination
             << " = "
-            << executionResult
+            << datapath.getExecutionResult()
             << std::endl;
 
     registerFile.printRegisters();
@@ -277,129 +305,100 @@ Instruction TinyCPU::getCurrentInstruction() const {
 
 void TinyCPU::executeStage() {
 
-    switch (currentInstruction.opcode) {
+    if (
+        currentControlSignals.usesALU
+    ) {
 
-        case Opcode::LOAD:
+        datapath.executeOperation(
 
-            executionResult =
-                currentInstruction.immediate;
+            currentControlSignals
+                .aluOperation
+        );
+    }
 
-            break;
+    if (
+        currentControlSignals
+            .usesImmediate
+    ) {
 
-        case Opcode::MOV:
+        datapath.setExecutionResult(
 
-            executionResult = operandA;
-
-            break;
-
-        case Opcode::ADD:
-
-            executionResult = operandA + operandB;
-
-            break;
-
-        case Opcode::SUB:
-
-            executionResult = operandA - operandB;
-
-            break;
-
-        default:
-
-            break;
+            currentInstruction
+                .immediate
+        );
     }
 }
 
 void TinyCPU::writebackStage() {
 
-    switch (currentInstruction.opcode) {
+    if (
+        currentControlSignals.writesRegister
+    ) {
+        
+        registerFile.writeRegister(
 
+            currentInstruction.destination,
 
-        case Opcode::LOAD:
+            datapath.getExecutionResult()
+        );
 
-            registerFile.writeRegister(
-                currentInstruction.destination,
-                executionResult
-            );
+        std::cout
+            << "WRITEBACK -> R"
+            << currentInstruction.destination
+            << " = "
+            << datapath.getExecutionResult()
+            << std::endl;
 
-            break;
-
-        case Opcode::MOV:
-
-            registerFile.writeRegister(
-                currentInstruction.destination,
-                executionResult
-            );
-
-            break;
-
-        case Opcode::ADD:
-
-            registerFile.writeRegister(
-                currentInstruction.destination,
-                executionResult
-            );
-
-            break;
-
-        case Opcode::SUB:
-
-            registerFile.writeRegister(
-                currentInstruction.destination,
-                executionResult
-            );
-
-            break;
-
-        default:
-
-            break;
+        ++instructionsRetired;
     }
 }
 
 void TinyCPU::decodeStage() {
 
+    currentControlSignals =
+        controlUnit.decode(
+            currentInstruction
+        );
+
     switch (currentInstruction.opcode) {
 
         case Opcode::MOV:
+            if(currentControlSignals.usesImmediate) {
 
-            operandA =
-
-                registerFile.readRegister(
-                    currentInstruction.source1
+                datapath.setOperandA(
+                    currentInstruction.immediate
                 );
+            }
+            else {
+
+                datapath.setOperandA(
+                    registerFile.readRegister(currentInstruction.source1)
+                );
+            }
 
             break;
 
         case Opcode::ADD:
 
-            operandA =
+            datapath.setOperandA(
+                registerFile.readRegister(currentInstruction.source1)
+            );
 
-                registerFile.readRegister(
-                    currentInstruction.source1
-                );
-
-            operandB =
-
-                registerFile.readRegister(
-                    currentInstruction.source2
-                );
+            datapath.setOperandB(
+                registerFile.readRegister(currentInstruction.source2)
+            );
 
             break;
 
         case Opcode::SUB:
 
-            operandA =
+            datapath.setOperandA(
+                registerFile.readRegister(currentInstruction.source1)
+            );
 
-                registerFile.readRegister(
-                    currentInstruction.source1
-                );
-
-            operandB =
-
-                registerFile.readRegister(
-                    currentInstruction.source2
-                );
+            datapath.setOperandB(
+                registerFile.readRegister(currentInstruction.source2)
+            );
 
             break;
 
@@ -439,17 +438,35 @@ void TinyCPU::printPipelineState() const {
         << std::endl;
 
     std::cout
-        << "Operand A: "
-        << operandA
+        << "Uses ALU: "
+        << currentControlSignals.usesALU
         << std::endl;
 
     std::cout
-        << "Operand B: "
-        << operandB
+        << "Uses Two Operands: "
+        << currentControlSignals.usesTwoOperands
+        << std::endl;
+
+    datapath.printState();
+
+    std::cout
+        << "Writes Register: "
+        << currentControlSignals.writesRegister
         << std::endl;
 
     std::cout
-        << "Execution Result: "
-        << executionResult
+        << "ALU Connected: YES"
         << std::endl;
-}
+
+    std::cout
+        << "ALU Operation: "
+        << aluOperationToString(
+            currentControlSignals.aluOperation
+        )
+        << std::endl;
+
+    std::cout
+        << "Uses Immediate: "
+        << currentControlSignals.usesImmediate
+        << std::endl;
+    }

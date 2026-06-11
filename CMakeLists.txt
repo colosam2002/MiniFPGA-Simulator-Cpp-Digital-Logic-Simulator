@@ -42,6 +42,10 @@ add_executable(minifpga
     src/cpu/InstructionDecoder.cpp
     src/cpu/ProgramLoader.cpp
     src/cpu/CPUStage.cpp
+    src/cpu/ControlUnit.cpp
+    src/cpu/Datapath.cpp
+    src/cpu/SimpleALU.cpp
+    src/cpu/ALUOperation.cpp
 )
 
 target_include_directories(minifpga PRIVATE
